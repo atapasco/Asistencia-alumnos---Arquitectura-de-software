@@ -5,12 +5,7 @@ from config.bd import meta, engine
 users = Table(
     "users",
     meta,
-    Column("id", Integer, primary_key=True),
-    Column(
-        "name",
-        String(255),
-    ),
-    Column("email", String(255)),
+    Column("email", String(255),primary_key=True),
     Column("password", String(255)),
     Column("role", Integer()),
 )

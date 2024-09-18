@@ -24,7 +24,7 @@ def get_users():
 
 @user.post("/", tags=["users"], response_model=User, description="Create a new user")
 def create_user(user: User):
-    new_user = {"id": user.id, "name": user.name, "email": user.email, "role":user.role}
+    new_user = {"email": user.email, "role":user.role}
     new_user["password"] = f.encrypt(user.password.encode("utf-8"))
     result = conn.execute(users.insert().values(new_user))
-    return conn.execute(users.select().where(users.c.id == result.lastrowid)).first()
+    return conn.execute(users.select().where(users.c.email == result.lastrowid)).first()
