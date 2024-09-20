@@ -5,9 +5,9 @@ from config.bd import meta, engine
 classes = Table(
     "classes",
     meta,
-    Column("id", String(5), primary_key=True),
+    Column("id", Integer, primary_key=True),
     Column("name",String(255)),
-    Column("professor", Integer, ForeignKey("professors.id")),
+    Column("professor", String(12), ForeignKey("professors.id")),
     Column("subjet", Integer, ForeignKey("subjects.id")),
     
 )

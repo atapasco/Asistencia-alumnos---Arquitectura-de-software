@@ -2,9 +2,9 @@ from pydantic import BaseModel
 from typing import Optional
 
 class ClassSchema(BaseModel):
-    id: str
+    id: Optional[int]
     name: str
-    professor: int
+    professor: str
     subject: int
 
     class Config:
