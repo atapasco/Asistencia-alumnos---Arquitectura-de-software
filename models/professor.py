@@ -5,7 +5,7 @@ professors = Table(
     "professors",
     meta,
     Column("id", String(12), primary_key=True),
-    Column("user_id", Integer, ForeignKey("users.email"), unique=True),
+    Column("user_email", String(255), ForeignKey("users.email"), unique=True),
     Column("name", String(255)),
     Column("birth_date", Date)
 )

@@ -4,7 +4,7 @@ from datetime import date
 
 class StudentSchema(BaseModel):
     id: Optional[int]
-    user_id: int
+    user_email: str
     name: str
     birth_date: date
     grade: int

@@ -5,7 +5,7 @@ students = Table(
     "students",
     meta,
     Column("id", Integer, primary_key=True),
-    Column("user_id", Integer, ForeignKey("users.id")),
+    Column("user_email", String(255), ForeignKey("users.email")),
     Column("name", String(255)),
     Column("birth_date", Date),
     Column("grade", Integer),

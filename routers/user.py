@@ -22,7 +22,7 @@ f = Fernet(key)
 def get_users():
     return conn.execute(users.select()).fetchall()
 
-@user.post("/", tags=["users"], response_model=User, description="Create a new user")
+@user.post("/user_post", tags=["users"], response_model=User, description="Create a new user")
 def create_user(user: User):
     new_user = {"email": user.email, "role":user.role}
     new_user["password"] = f.encrypt(user.password.encode("utf-8"))

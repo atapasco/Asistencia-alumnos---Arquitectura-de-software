@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from routers.user import user
+from routers.subject import subject
+from routers.student import student
+from routers.professor import professor 
 from config.openAPI import tags_metadata
 
 app = FastAPI(
@@ -10,3 +13,6 @@ app = FastAPI(
 )
 
 app.include_router(user)
+app.include_router(subject)
+app.include_router(student)
+app.include_router(professor)
