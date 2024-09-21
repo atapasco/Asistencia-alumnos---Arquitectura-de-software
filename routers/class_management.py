@@ -1,14 +1,15 @@
 from fastapi import APIRouter, HTTPException
 from config.bd import conn
 from models.class_management import classes  # Modelo de la tabla 'classes'
+from schemas.students_class import ClassStudentSchema
 from models.relationships.students_class import students_classes  # Modelo de la tabla intermedia
 from models.student import students  # Modelo de la tabla 'students'
 from schemas.class_management import ClassSchema
 from typing import List
+from fastapi.encoders import jsonable_encoder
 
 class_router = APIRouter()
 
-# Endpoint para obtener todas las clases y los estudiantes relacionados
 @class_router.get(
     "/classes/{class_id}/students",
     tags=["classes"],
@@ -16,15 +17,19 @@ class_router = APIRouter()
 )
 def get_students_in_class(class_id: int):
     # Consulta utilizando SQLAlchemy
-    query = students.join(students_classes, students.c.id == students_classes.c.id_estudiante) \
-                    .select() \
-                    .where(students_classes.c.id_clase == class_id)
-    
-    result = conn.execute(query).fetchall()
-    if not result:
-        raise HTTPException(status_code=404, detail="No students found for this class")
-    
-    return result
+    result = conn.execute(students_classes.select().where(students_classes.c.id_clase == class_id)).fetchall()
+
+    # Convertir el resultado en una lista de diccionarios
+    students_list = []
+    for row in result:
+        student_data = {
+            "id_student": row[0],  # Acceder por índice de la tupla
+            "id_clase": row[1],    # Acceder por índice de la tupla
+            # Agrega más campos según las columnas de la tabla
+        }
+        students_list.append(student_data)
+
+    return jsonable_encoder(students_list)
 
 # Endpoint para añadir estudiantes a una clase
 @class_router.post(
@@ -32,21 +37,15 @@ def get_students_in_class(class_id: int):
     tags=["classes"],
     description="Add a student to a specific class"
 )
-def add_student_to_class(class_id: int, student_id: int):
+def add_student_to_class(class_data: ClassStudentSchema):
     # Verificar si el estudiante ya está en la clase
-    check_query = students_classes.select().where(
-        (students_classes.c.id_estudiante == student_id) & 
-        (students_classes.c.id_clase == class_id)
-    )
-    existing = conn.execute(check_query).fetchone()
-    
-    if existing:
-        raise HTTPException(status_code=400, detail="Student is already in this class")
+    new_class = {
+        "id_clase" : class_data.class_id,
+        "id_estudiante" : class_data.student_id
+    }
 
-    # Añadir el estudiante a la clase
-    conn.execute(students_classes.insert().values(id_estudiante=student_id, id_clase=class_id))
-    
-    return {"message": f"Student {student_id} added to class {class_id} successfully"}
+    result = conn.execute(students_classes.insert().values(new_class))
+    return conn.execute(students_classes.select().where(students_classes.c.id_estudiante == result.lastrowid)).first()
 
 # Endpoint para crear una nueva clase
 @class_router.post(
@@ -60,7 +59,7 @@ def create_class(class_data: ClassSchema):
         "id": class_data.id,
         "name": class_data.name,
         "professor": class_data.professor,
-        "subject": class_data.subject,
+        "subjet": class_data.subjet,
     }
     
     # Inserción usando SQLAlchemy
@@ -73,3 +72,22 @@ def create_class(class_data: ClassSchema):
         raise HTTPException(status_code=500, detail="Class creation failed")
     
     return created_class
+
+# Endpoint para obtener todas las clases creadas
+@class_router.get(
+    "/classes/",
+    tags=["classes"],
+    description="Get a list of all created classes",
+    response_model=List[ClassSchema]  # Indica que devuelve una lista de clases
+)
+def get_all_classes():
+    # Consulta todas las clases usando SQLAlchemy
+    query = classes.select()
+    
+    # Ejecuta la consulta y obtiene el resultado
+    result = conn.execute(query).fetchall()
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="No classes found")
+    
+    return result

@@ -1,11 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class ClassSchema(BaseModel):
-    id: Optional[int]
-    name: str
-    professor: str
-    subjet: int
+class ClassStudentSchema(BaseModel):
+    student_id: int
+    class_id: int
 
     class Config:
         orm_mode = True
