@@ -4,6 +4,7 @@ from routers.subject import subject_router
 from routers.student import student
 from routers.professor import professor 
 from routers.class_management import class_router
+from routers.attendance import attendance_router
 from config.openAPI import tags_metadata
 
 app = FastAPI(
@@ -18,3 +19,4 @@ app.include_router(subject_router)
 app.include_router(student)
 app.include_router(professor)
 app.include_router(class_router)
+app.include_router(attendance_router)
