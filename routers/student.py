@@ -1,10 +1,7 @@
-from fastapi import APIRouter
-from config.bd import conn
-from models.student import students  # Asegúrate de tener el modelo de la tabla 'students'
+from fastapi import APIRouter, HTTPException
+from service.student_service import get_all_students, create_new_student
 from schemas.student import StudentSchema
 from typing import List
-from starlette.status import HTTP_204_NO_CONTENT
-from sqlalchemy import select
 
 student = APIRouter()
 
@@ -15,16 +12,21 @@ student = APIRouter()
     description="Get a list of all students",
 )
 def get_students():
-    return conn.execute(students.select()).fetchall()
+    # Llama al servicio para obtener todos los estudiantes
+    students = get_all_students()
+    if not students:
+        raise HTTPException(status_code=404, detail="No students found.")
+    return students
 
-@student.post("/student_post", tags=["students"], response_model=StudentSchema, description="Create a new student")
+@student.post(
+    "/student_post",
+    tags=["students"],
+    response_model=StudentSchema,
+    description="Create a new student"
+)
 def create_student(student: StudentSchema):
-    new_student = {
-        "user_email": student.user_email,
-        "name": student.name,
-        "birth_date": student.birth_date,
-        "grade": student.grade,
-    }
-    result = conn.execute(students.insert().values(new_student))
-    return conn.execute(students.select().where(students.c.id == result.lastrowid)).first()
-
+    # Llama al servicio para crear un nuevo estudiante
+    new_student = create_new_student(student)
+    if new_student is None:
+        raise HTTPException(status_code=400, detail="Error creating student.")
+    return new_student

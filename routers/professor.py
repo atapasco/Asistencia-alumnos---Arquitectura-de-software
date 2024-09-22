@@ -1,10 +1,12 @@
-from fastapi import APIRouter
-from config.bd import conn
-from models.professor import professors  # Asegúrate de tener el modelo de la tabla 'professors'
+from fastapi import APIRouter, HTTPException
 from schemas.professor import ProfessorSchema
 from typing import List
-from starlette.status import HTTP_204_NO_CONTENT
-from sqlalchemy import select
+from service.professor_service import (
+    get_all_professors,
+    create_new_professor,
+    get_professor_by_id,
+    delete_professor_by_id,
+)
 
 professor = APIRouter()
 
@@ -15,18 +17,22 @@ professor = APIRouter()
     description="Get a list of all professors",
 )
 def get_professors():
-    return conn.execute(professors.select()).fetchall()
+    professors = get_all_professors()
+    if not professors:
+        raise HTTPException(status_code=404, detail="No professors found.")
+    return professors
 
-@professor.post("/profesor_post", tags=["professors"], response_model=ProfessorSchema, description="Create a new professor")
+@professor.post(
+    "/profesor_post",
+    tags=["professors"],
+    response_model=ProfessorSchema,
+    description="Create a new professor"
+)
 def create_professor(professor: ProfessorSchema):
-    new_professor = {
-        "id": professor.id,
-        "user_email": professor.user_email,
-        "name": professor.name,
-        "birth_date": professor.birth_date,
-    }
-    result = conn.execute(professors.insert().values(new_professor))
-    return conn.execute(professors.select().where(professors.c.id == result.lastrowid)).first()
+    new_professor = create_new_professor(professor)
+    if new_professor is None:
+        raise HTTPException(status_code=400, detail="Error creating professor.")
+    return new_professor
 
 @professor.get(
     "/professors/{id}",
@@ -35,14 +41,18 @@ def create_professor(professor: ProfessorSchema):
     description="Get details of a specific professor by ID",
 )
 def get_professor(id: str):
-    return conn.execute(professors.select().where(professors.c.id == id)).first()
+    professor = get_professor_by_id(id)
+    if professor is None:
+        raise HTTPException(status_code=404, detail="Professor not found.")
+    return professor
 
 @professor.delete(
     "/professors/{id}",
     tags=["professors"],
-    status_code=HTTP_204_NO_CONTENT,
+    status_code=204,
     description="Delete a professor by ID",
 )
 def delete_professor(id: str):
-    conn.execute(professors.delete().where(professors.c.id == id))
+    if not delete_professor_by_id(id):
+        raise HTTPException(status_code=404, detail="Professor not found or could not be deleted.")
     return {"message": "Professor deleted successfully"}
