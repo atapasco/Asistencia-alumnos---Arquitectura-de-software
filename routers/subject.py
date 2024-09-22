@@ -1,27 +1,28 @@
-from fastapi import APIRouter
-from config.bd import conn
-from models.subject import subjects  
-from schemas.subject import SubjectSchema
+from fastapi import APIRouter, HTTPException
 from typing import List
-from starlette.status import HTTP_204_NO_CONTENT
-from sqlalchemy import select
+from starlette.status import HTTP_404_NOT_FOUND
+from schemas.subject import SubjectSchema
+from service.subject_service import get_all_subjects, create_new_subject
 
-subject = APIRouter()
+subject_router = APIRouter()
 
-@subject.get(
+@subject_router.get(
     "/subjects",
     tags=["subjects"],
     response_model=List[SubjectSchema],
     description="Get a list of all subjects",
 )
 def get_subjects():
-    return conn.execute(subjects.select()).fetchall()
+    subjects = get_all_subjects()
+    if not subjects:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="No subjects found")
+    return subjects
 
-@subject.post("/subject_post", tags=["subjects"], response_model=SubjectSchema, description="Create a new subject")
+@subject_router.post(
+    "/subject_post", 
+    tags=["subjects"], 
+    response_model=SubjectSchema, 
+    description="Create a new subject"
+)
 def create_subject(subject: SubjectSchema):
-    new_subject = {
-        "name": subject.name,
-        "description": subject.description,
-    }
-    result = conn.execute(subjects.insert().values(new_subject))
-    return conn.execute(subjects.select().where(subjects.c.id == result.lastrowid)).first()
+    return create_new_subject(subject)
