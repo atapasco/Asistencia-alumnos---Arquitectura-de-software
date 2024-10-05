@@ -11,6 +11,55 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - microservice-network
+
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8001:8001"
+    environment:
+      DATABASE_URL: mysql://root:rootpassword@mysql:3306/mydatabase
+    depends_on:
+      - mysql
+    networks:
+      - microservice-network
+
+  attendance_control:
+    build:
+      context: ./attendance_control
+      dockerfile: Dockerfile
+    container_name: attendance-service
+    ports:
+      - "8002:8002"
+    environment:
+      DATABASE_URL: mysql://root:rootpassword@mysql:3306/mydatabase
+    depends_on:
+      - mysql
+    networks:
+      - microservice-network
+
+  academic_management:
+    build:
+      context: ./academic_management
+      dockerfile: Dockerfile
+    container_name: academic-service
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: mysql://root:rootpassword@mysql:3306/mydatabase
+    depends_on:
+      - mysql
+    networks:
+      - microservice-network
 
 volumes:
   mysql-data:
+
+networks:
+  microservice-network:
+    driver: bridge
+

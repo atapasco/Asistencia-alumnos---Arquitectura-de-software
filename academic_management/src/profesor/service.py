@@ -1,6 +1,6 @@
 from config.bd import conn
-from models.professor import professors
-from schemas.professor import ProfessorSchema
+from .models import professors
+from .schemas import ProfessorSchema
 from sqlalchemy.exc import SQLAlchemyError
 
 def get_all_professors():
