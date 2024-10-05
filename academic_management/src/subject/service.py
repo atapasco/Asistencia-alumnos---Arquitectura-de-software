@@ -1,6 +1,6 @@
 from config.bd import conn
-from models.subject import subjects
-from schemas.subject import SubjectSchema
+from .models import subjects
+from .schemas import SubjectSchema
 from sqlalchemy.exc import SQLAlchemyError
 
 def get_all_subjects():

@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from cryptography.fernet import Fernet
-from dataclasses import conn
+from database import conn
 from .models import users
 
 key = Fernet.generate_key()

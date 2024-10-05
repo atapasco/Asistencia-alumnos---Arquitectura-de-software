@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from schemas.professor import ProfessorSchema
+from .schemas import ProfessorSchema
 from typing import List
-from service.professor_service import (
+from .service import (
     get_all_professors,
     create_new_professor,
     get_professor_by_id,

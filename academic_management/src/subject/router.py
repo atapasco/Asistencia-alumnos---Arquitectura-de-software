@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 from starlette.status import HTTP_404_NOT_FOUND
-from schemas.subject import SubjectSchema
-from service.subject_service import get_all_subjects, create_new_subject
+from .schemas import SubjectSchema
+from .service import get_all_subjects, create_new_subject
 
 subject_router = APIRouter()
 

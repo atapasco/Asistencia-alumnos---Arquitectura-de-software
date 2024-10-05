@@ -1,4 +1,4 @@
-from config.bd import conn
+from database import conn
 from .models import professors
 from .schemas import ProfessorSchema
 from sqlalchemy.exc import SQLAlchemyError

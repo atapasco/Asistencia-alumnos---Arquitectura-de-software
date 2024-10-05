@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Table
-from config.bd import meta, engine
+from database import meta, engine
 
 
 subjects = Table(

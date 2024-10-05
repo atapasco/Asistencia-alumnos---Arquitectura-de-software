@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from config.bd import conn
+from database import conn
 from models.attendance import attendance  # Modelo de la tabla 'attendance'
 from schemas.attendance import AttendanceSchema  # Asegúrate de que esta ruta sea correcta
 from fastapi.encoders import jsonable_encoder
