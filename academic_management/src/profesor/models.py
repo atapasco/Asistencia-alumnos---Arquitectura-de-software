@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, String, Date, Table
-from config.bd import meta, engine
+from database import meta, engine
 
 professors = Table(
     "professors",

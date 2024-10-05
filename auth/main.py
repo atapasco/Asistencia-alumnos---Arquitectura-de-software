@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from src.auth import router as auth_router
 from src.user import router as user_router
-from config.openAPI import tags_metadata
+from .config import tags_metadata
 
 app = FastAPI(
     title="Users API",
@@ -10,5 +9,4 @@ app = FastAPI(
     openapi_tags=tags_metadata,
 )
 
-app.include_router(auth_router)
 app.include_router(user_router)

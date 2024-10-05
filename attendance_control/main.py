@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from src.attendance import router as attendance_router
 from src.reporting import router as report_router
 from src.notifications import router as notifications_router
-from config.openAPI import tags_metadata
+from .config import tags_metadata
 
 app = FastAPI(
     title="Users API",

@@ -3,7 +3,7 @@ from src.course import router as course_router
 from src.profesor import router as profesor_router
 from src.student import router as student_router
 from src.subject import router as subject_router
-from config.openAPI import tags_metadata
+from .config import tags_metadata
 
 app = FastAPI(
     title="Users API",

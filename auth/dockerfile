@@ -2,6 +2,13 @@ FROM python:3.9
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y netcat-openbsd
+
+
+COPY wait-for-it.sh .
+
+RUN chmod +x wait-for-it.sh
+
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir --upgrade pip && \
@@ -13,4 +20,4 @@ COPY . .
 EXPOSE 8002
 
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002", "--reload"]
+CMD ["./wait-for-it.sh", "mysql", "3306", "--", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002", "--reload"]
