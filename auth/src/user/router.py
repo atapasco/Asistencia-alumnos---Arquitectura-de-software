@@ -1,8 +1,8 @@
 # routes/user.py
 from fastapi import APIRouter, HTTPException
-from schemas.user import User
+from .schemas import User
 from typing import List
-from service.user_service import create_user, get_all_users, authenticate_user
+from .service import create_user, get_all_users, authenticate_user
 
 user = APIRouter()
 
