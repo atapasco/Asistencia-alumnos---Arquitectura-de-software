@@ -4,7 +4,7 @@ from cryptography.fernet import Fernet
 from config.bd import conn
 from models.user import users
 
-# Clave para la encriptación/desencriptación de contraseñas
+# Clave para la encriptación/desencriptación de contraseña
 key = Fernet.generate_key()
 f = Fernet(key)
 
