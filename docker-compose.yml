@@ -13,6 +13,10 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - microservice-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
 
   auth:
     build:
@@ -27,6 +31,8 @@ services:
       - mysql
     networks:
       - microservice-network
+    command: >
+      sh -c "./wait-for-it.sh mysql 3306 --timeout=60 -- alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8001 --reload"
 
   attendance_control:
     build:
@@ -41,6 +47,9 @@ services:
       - mysql
     networks:
       - microservice-network
+    command: >
+      sh -c "./wait-for-it.sh mysql 3306 --timeout=60 -- alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8002 --reload"
+
 
   academic_management:
     build:
@@ -55,6 +64,9 @@ services:
       - mysql
     networks:
       - microservice-network
+    command: >
+      sh -c "./wait-for-it.sh mysql 3306 --timeout=60 -- alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+
 
 volumes:
   mysql-data:

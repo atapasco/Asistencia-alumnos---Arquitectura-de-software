@@ -15,6 +15,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY . .
 
+RUN alembic revision --autogenerate -m "initial migration"
+
+RUN alembic upgrade head
 
 EXPOSE 8001
 

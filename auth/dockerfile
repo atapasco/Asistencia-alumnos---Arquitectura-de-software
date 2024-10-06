@@ -9,6 +9,7 @@ COPY wait-for-it.sh .
 
 RUN chmod +x wait-for-it.sh
 
+
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir --upgrade pip && \
@@ -16,6 +17,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY . .
 
+RUN alembic revision --autogenerate -m "initial migration"
+
+RUN alembic upgrade head
 
 EXPOSE 8002
 
