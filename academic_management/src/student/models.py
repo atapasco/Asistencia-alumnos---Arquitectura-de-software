@@ -10,5 +10,3 @@ students = Table(
     Column("birth_date", Date),
     Column("grade", Integer),
 )
-
-meta.create_all(engine)

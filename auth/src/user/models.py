@@ -10,4 +10,3 @@ users = Table(
     Column("role", Integer()),
 )
 
-meta.create_all(engine)

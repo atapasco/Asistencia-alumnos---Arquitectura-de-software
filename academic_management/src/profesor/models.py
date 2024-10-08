@@ -9,5 +9,3 @@ professors = Table(
     Column("name", String(255)),
     Column("birth_date", Date)
 )
-
-meta.create_all(engine)

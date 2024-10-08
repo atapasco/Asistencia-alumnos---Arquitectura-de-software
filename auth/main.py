@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from src.user import router as user_router
-from .config import tags_metadata
+from src.user.router import user as user_router
+from config import tags_metadata
 
 app = FastAPI(
     title="Users API",

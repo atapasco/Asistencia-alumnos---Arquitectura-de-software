@@ -1,4 +1,4 @@
-from config.bd import conn
+from database import conn
 from .models import subjects
 from .schemas import SubjectSchema
 from sqlalchemy.exc import SQLAlchemyError

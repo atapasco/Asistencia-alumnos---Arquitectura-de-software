@@ -39,6 +39,8 @@ services:
       DATABASE_URL: mysql://root:rootpassword@mysql:3306/mydatabase
     depends_on:
       - mysql
+      - auth
+      - academic_management
     networks:
       - microservice-network
 
@@ -53,8 +55,22 @@ services:
       DATABASE_URL: mysql://root:rootpassword@mysql:3306/mydatabase
     depends_on:
       - mysql
+      - auth
     networks:
       - microservice-network
+
+  migrations_service:  # Nuevo microservicio para crear tablas
+    build:
+      context: ./migrations_service  # Asegúrate de que el Dockerfile esté en esta carpeta
+      dockerfile: Dockerfile
+    container_name: migrations-service
+    environment:
+      DATABASE_URL: mysql://root:rootpassword@mysql:3306/mydatabase
+    depends_on:
+      - mysql
+    networks:
+      - microservice-network
+
 
 volumes:
   mysql-data:
@@ -62,4 +78,3 @@ volumes:
 networks:
   microservice-network:
     driver: bridge
-
