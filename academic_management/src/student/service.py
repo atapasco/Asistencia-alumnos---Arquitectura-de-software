@@ -1,4 +1,4 @@
-from config.bd import conn
+from database import conn
 from .models import students
 from .schemas import StudentSchema
 from sqlalchemy import select

@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from src.attendance import router as attendance_router
-from src.reporting import router as report_router
-from src.notifications import router as notifications_router
-from .config import tags_metadata
+from src.attendance.router import attendance_router
+from src.reporting import router
+from src.notifications import router 
+from config import tags_metadata
 
 app = FastAPI(
     title="Users API",
@@ -12,5 +12,3 @@ app = FastAPI(
 )
 
 app.include_router(attendance_router)
-app.include_router(notifications_router)
-app.include_router(report_router)

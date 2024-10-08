@@ -10,5 +10,3 @@ attendance = Table(
     Column("date", Date), 
     Column("status", String(10)) 
 )
-
-meta.create_all(engine)

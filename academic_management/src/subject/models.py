@@ -9,5 +9,3 @@ subjects = Table(
     Column("name", String(255)),  
     Column("description", String(255)), 
 )
-
-meta.create_all(engine)
