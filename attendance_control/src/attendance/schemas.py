@@ -8,6 +8,3 @@ class AttendanceSchema(BaseModel):
     class_id: int
     date: date
     status: str
-
-    class Config:
-        orm_mode = True

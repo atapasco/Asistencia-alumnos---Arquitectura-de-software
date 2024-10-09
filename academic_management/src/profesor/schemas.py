@@ -8,5 +8,3 @@ class ProfessorSchema(BaseModel):
     name: str
     birth_date: date
 
-    class Config:
-        orm_mode = True

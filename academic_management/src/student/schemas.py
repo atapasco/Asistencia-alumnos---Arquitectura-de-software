@@ -9,5 +9,4 @@ class StudentSchema(BaseModel):
     birth_date: date
     grade: int
 
-    class Config:
-        orm_mode = True
+

@@ -5,7 +5,7 @@ from src.subject.router import subject_router
 from config import tags_metadata
 
 app = FastAPI(
-    title="Users API",
+    title="Academic management API",
     description="a REST API using python and mysql",
     version="0.0.1",
     openapi_tags=tags_metadata,

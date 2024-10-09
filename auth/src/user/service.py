@@ -1,47 +1,52 @@
-from sqlalchemy import select
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-from cryptography.fernet import Fernet
-from database import conn
+from passlib.context import CryptContext
 from .models import users
+from database import engine  # Asegúrate de importar tu engine
 
-key = Fernet.generate_key()
-f = Fernet(key)
+# Crear el contexto para las contraseñas
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Crear una sesión local
+SessionLocal = sessionmaker(bind=engine)
 
 def create_user(user):
     try:
-        new_user = {"email": user.email, "role": user.role}
-        new_user["password"] = f.encrypt(user.password.encode("utf-8"))
-        
-        result = conn.execute(users.insert().values(new_user))
-        
-        return conn.execute(users.select().where(users.c.email == result.lastrowid)).first()
+        # Usar el contexto de la sesión
+        with SessionLocal() as session:
+            new_user = {
+                "email": user.email,
+                "role": user.role,
+                "password": pwd_context.hash(user.password)
+            }
+            
+            session.execute(users.insert().values(new_user))
+            session.commit()
+            
+            return session.execute(users.select().where(users.c.email == user.email)).first()
     except SQLAlchemyError as e:
         print(f"Error creating user: {str(e)}")
-        return None
+        raise  # Re-lanzar la excepción para manejo superior
 
 def get_all_users():
     try:
-        
-        return conn.execute(users.select()).fetchall()
+        with SessionLocal() as session:
+            return session.execute(users.select()).fetchall()
     except SQLAlchemyError as e:
         print(f"Error fetching users: {str(e)}")
-        return None
+        raise
 
 def authenticate_user(email: str, password: str):
     try:
-        user = conn.execute(users.select().where(users.c.email == email)).first()
-        if user:
-            
-            stored_password = f.decrypt(user.password.encode("utf-8")).decode("utf-8")
-            if stored_password == password:
-                
-                user_dict = {
-                    "password": user.password,
+        with SessionLocal() as session:
+            user = session.execute(users.select().where(users.c.email == email)).first()
+            if user and pwd_context.verify(password, user.password):
+                return {
                     "email": user.email,
                     "role": user.role
                 }
-                return user_dict
         return None 
     except SQLAlchemyError as e:
         print(f"Error during authentication: {str(e)}")
-        return None
+        raise

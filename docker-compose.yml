@@ -39,8 +39,6 @@ services:
       DATABASE_URL: mysql://root:rootpassword@mysql:3306/mydatabase
     depends_on:
       - mysql
-      - auth
-      - academic_management
     networks:
       - microservice-network
 
@@ -55,7 +53,6 @@ services:
       DATABASE_URL: mysql://root:rootpassword@mysql:3306/mydatabase
     depends_on:
       - mysql
-      - auth
     networks:
       - microservice-network
 
