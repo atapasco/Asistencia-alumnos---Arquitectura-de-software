@@ -31,9 +31,11 @@ def send_email(user_id, fecha):
     except Exception as e:
         print(f"Error al enviar el correo: {e}")
 
+
 def timer_finished(user_id):
     send_email(user_id)
     del timers[user_id]
+
 
 def start_timer(user_id):
     if user_id in timers:
@@ -45,6 +47,7 @@ def start_timer(user_id):
     timer.start()
     print(f"Temporizador iniciado para el usuario {user_id}")
 
+
 def cancel_timer(user_id):
     if user_id in timers:
         timers[user_id].cancel()
@@ -53,5 +56,4 @@ def cancel_timer(user_id):
     else:
         print(f"No hay temporizador activo para el usuario {user_id}")
 
-start_timer(user_id="atapasco@unicesar.edu.co")
-cancel_timer(user_id="atapasco@unicesar.edu.co")
+
