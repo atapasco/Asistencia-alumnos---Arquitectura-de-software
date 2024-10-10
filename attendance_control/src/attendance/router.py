@@ -15,8 +15,8 @@ attendance_router = APIRouter()
     response_model=AttendanceSchema,
     description="Register attendance for a specific class"
 )
-def register_attendance(class_id: int, attendance_data: AttendanceSchema):
-    return register_attendance_service(class_id, attendance_data)
+def register_attendance(class_id: int, attendance_data: AttendanceSchema, correo: str):
+    return register_attendance_service(class_id, attendance_data, correo)
 
 
 @attendance_router.put(
@@ -25,8 +25,8 @@ def register_attendance(class_id: int, attendance_data: AttendanceSchema):
     response_model=AttendanceSchema,
     description="Update attendance record"
 )
-def update_attendance(attendance_id: int, attendance_data: AttendanceSchema):
-    return update_attendance_service(attendance_id, attendance_data)
+def update_attendance(attendance_id: int, attendance_data: AttendanceSchema, correo: str):
+    return update_attendance_service(attendance_id, attendance_data, correo)
 
 
 @attendance_router.get(
