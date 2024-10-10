@@ -14,7 +14,7 @@ def register_attendance_service(class_id: int, attendance_data: AttendanceSchema
             "status": attendance_data.status,
         }
 
-        if attendance_data.status == "no asistio":
+        if attendance_data.status == "Ausente":
             start_timer(correo)
 
         result = conn.execute(attendance.insert().values(new_attendance))
@@ -37,9 +37,9 @@ def update_attendance_service(attendance_id: int, attendance_data: AttendanceSch
             date=attendance_data.date,
             status=attendance_data.status,
         )
-        if attendance_data.status == "no asistio":
+        if attendance_data.status == "Ausente":
             start_timer(correo)
-        if attendance_data.status == "asistio":
+        if attendance_data.status == "Presente":
             cancel_timer(correo)
 
         result = conn.execute(query)
