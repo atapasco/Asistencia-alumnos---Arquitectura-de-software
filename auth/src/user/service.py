@@ -40,13 +40,26 @@ def get_all_users():
 def authenticate_user(email: str, password: str):
     try:
         with SessionLocal() as session:
+            # Busca el usuario por su email en la base de datos
             user = session.execute(users.select().where(users.c.email == email)).first()
-            if user and pwd_context.verify(password, user.password):
+            
+            # Si el usuario no existe, retorna None
+            if user is None:
+                return None
+            
+            # El hash de la contraseña almacenada está en user.password
+            stored_password_hash = user.password
+            
+            # Verificar si la contraseña ingresada es correcta
+            if pwd_context.verify(password, stored_password_hash):
+                # Si la contraseña es correcta, retorna el usuario
                 return {
                     "email": user.email,
                     "role": user.role
                 }
-        return None 
+            else:
+                # Si la contraseña es incorrecta, retorna None
+                return None
     except SQLAlchemyError as e:
         print(f"Error during authentication: {str(e)}")
         raise

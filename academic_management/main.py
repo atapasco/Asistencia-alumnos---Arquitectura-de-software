@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from src.profesor.router import professor as profesor_router
 from src.student.router import student as student_router
 from src.subject.router import subject_router
+from src.course.router import class_router
 from config import tags_metadata
 
 app = FastAPI(
@@ -14,3 +15,4 @@ app = FastAPI(
 app.include_router(profesor_router)
 app.include_router(student_router)
 app.include_router(subject_router)
+app.include_router(class_router)
