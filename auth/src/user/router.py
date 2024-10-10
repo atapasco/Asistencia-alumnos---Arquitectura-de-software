@@ -1,6 +1,6 @@
 # routes/user.py
-from fastapi import APIRouter, HTTPException
-from .schemas import User
+from fastapi import APIRouter, HTTPException,Body
+from .schemas import User,UserLogin
 from typing import List
 from .service import create_user, get_all_users, authenticate_user
 
@@ -16,8 +16,8 @@ def create_user_endpoint(user: User):
 
 # Nuevo endpoint para iniciar sesión
 @user.post("/login", tags=["users"], description="Authenticate a user")
-def login(email: str, password: str):
-    authenticated_user = authenticate_user(email, password)
+def login(login_data: UserLogin = Body(...)):
+    authenticated_user = authenticate_user(login_data.email, login_data.password)
     if authenticated_user:
         return {"message": "Login successful", "user": authenticated_user}
     else:

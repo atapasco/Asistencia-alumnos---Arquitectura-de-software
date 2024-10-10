@@ -29,10 +29,15 @@ def get_professors():
     description="Create a new professor"
 )
 def create_professor(professor: ProfessorSchema):
-    new_professor = create_new_professor(professor)
-    if new_professor is None:
-        raise HTTPException(status_code=400, detail="Error creating professor.")
-    return new_professor
+    try:
+        print(f"Received professor data: {professor}")  # Para depuración
+        new_professor = create_new_professor(professor)
+        if new_professor is None:
+            raise HTTPException(status_code=400, detail="Error creating professor.")
+        return new_professor
+    except Exception as e:
+        print(f"Error in create_professor: {e}")  # Para depuración
+        raise HTTPException(status_code=400, detail="Bad request.")
 
 @professor.get(
     "/professors/{id}",
